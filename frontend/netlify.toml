@@ -1,0 +1,39 @@
+# ============================================================
+# netlify.toml — Netlify Frontend Deployment Configuration
+# ============================================================
+# This file tells Netlify how to deploy your frontend.
+#
+# STEPS TO DEPLOY FRONTEND ON NETLIFY:
+# 1. Push your code to GitHub
+# 2. Go to netlify.com and create an account
+# 3. Click "Add new site" → "Import an existing project"
+# 4. Connect your GitHub repo
+# 5. Set publish directory to: frontend
+# 6. Click "Deploy site"
+# 7. Update API_BASE_URL in script.js to your Render backend URL
+# ============================================================
+
+[build]
+  # The folder containing your frontend files
+  publish = "."
+
+  # No build command needed — it's plain HTML/CSS/JS
+  command = ""
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect all routes to index.html (for single-page apps)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"

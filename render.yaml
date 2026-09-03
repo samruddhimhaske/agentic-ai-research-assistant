@@ -1,0 +1,48 @@
+# ============================================================
+# render.yaml — Render Deployment Configuration
+# ============================================================
+# This file tells Render (render.com) exactly how to deploy
+# your backend. When you connect your GitHub repo to Render,
+# it reads this file automatically.
+#
+# STEPS TO DEPLOY ON RENDER:
+# 1. Push your code to GitHub
+# 2. Go to render.com and create an account
+# 3. Click "New +" → "Web Service"
+# 4. Connect your GitHub repo
+# 5. Render will auto-detect this render.yaml
+# 6. Add your OPENAI_API_KEY in the Environment tab
+# 7. Click "Deploy"
+# ============================================================
+
+services:
+  - type: web
+    name: ai-research-agent-backend
+    runtime: python
+    region: oregon        # Choose the region closest to your users
+
+    # Build command: install all Python packages
+    buildCommand: cd backend && pip install -r requirements.txt
+
+    # Start command: run the FastAPI server
+    startCommand: cd backend && uvicorn main:app --host 0.0.0.0 --port $PORT
+
+    # Environment variables
+    # Add OPENAI_API_KEY manually in Render dashboard (keep it secret!)
+    envVars:
+      - key: MODEL_NAME
+        value: gpt-4o-mini
+      - key: DEBUG
+        value: "False"          # Disable debug mode in production!
+      - key: MAX_ITERATIONS
+        value: "5"
+      - key: MAX_HISTORY_SIZE
+        value: "50"
+      # OPENAI_API_KEY — add this manually in Render's dashboard
+      # Never put actual API keys in this file!
+
+    # Health check — Render pings this to verify the app is alive
+    healthCheckPath: /health
+
+    # Auto-deploy when you push to main branch
+    autoDeploy: true

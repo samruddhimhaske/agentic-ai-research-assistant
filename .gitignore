@@ -1,0 +1,75 @@
+# ============================================================
+# .gitignore — Files NOT to upload to GitHub
+# ============================================================
+# These files are either:
+#   - Secret (API keys, passwords)
+#   - Auto-generated (can be recreated)
+#   - Environment-specific (only relevant on your machine)
+# ============================================================
+
+# --- SECRET: Environment variables (NEVER commit this!) ---
+.env
+.env.local
+.env.production
+.env.staging
+*.env
+
+# --- Python auto-generated files ---
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+
+# --- Virtual environments ---
+# These are created by: python -m venv venv
+venv/
+.venv/
+env/
+ENV/
+.python-version
+
+# --- Python packaging ---
+*.egg-info/
+*.egg
+dist/
+build/
+*.whl
+.eggs/
+
+# --- Testing ---
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+coverage.xml
+
+# --- IDEs and editors ---
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store          # macOS folder metadata
+Thumbs.db          # Windows thumbnail cache
+
+# --- Logs ---
+*.log
+logs/
+
+# --- Docker ---
+# Don't ignore docker-compose.yml (we want that in git)
+# But ignore override files with secrets
+docker-compose.override.yml
+
+# --- Node (if you ever add a JS build step) ---
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# --- OS files ---
+.DS_Store
+.AppleDouble
+.LSOverride
+._*

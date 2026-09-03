@@ -1,0 +1,35 @@
+# ============================================================
+# AI Research Assistant Agent - Python Dependencies
+# ============================================================
+# Install all dependencies with:
+#   pip install -r requirements.txt
+# ============================================================
+
+# --- Web Framework ---
+fastapi==0.111.0          # The web framework that handles API requests
+uvicorn[standard]==0.30.1 # ASGI server that runs our FastAPI app
+
+# --- AI / LLM Libraries ---
+langchain==0.2.6          # Framework for building AI agents and chains
+langchain-openai==0.1.13  # LangChain integration for OpenAI models
+openai==1.35.3            # Direct OpenAI API client
+
+# --- Data Validation ---
+pydantic==2.7.4           # Data validation and type checking
+pydantic-settings==2.3.4  # Load settings from .env files
+
+# --- Environment Variables ---
+python-dotenv==1.0.1      # Load .env file into environment variables
+
+# --- HTTP Requests (for search tool) ---
+httpx==0.27.0             # Async HTTP client for making web requests
+requests==2.32.3          # Sync HTTP client (fallback)
+
+# --- Wikipedia Tool ---
+wikipedia==1.4.0          # Python wrapper for Wikipedia API
+
+# --- Math / Calculation ---
+# Python's built-in 'math' module is used — no extra install needed
+
+# --- Utilities ---
+python-multipart==0.0.9   # Required for FastAPI file uploads

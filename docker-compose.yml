@@ -1,0 +1,79 @@
+# ============================================================
+# docker-compose.yml — Run Everything with One Command
+# ============================================================
+# Docker Compose lets you define and run multi-container apps.
+# For this project, we have one service: the backend API.
+#
+# HOW TO USE:
+#   Start:   docker-compose up --build
+#   Stop:    docker-compose down
+#   Logs:    docker-compose logs -f backend
+#   Rebuild: docker-compose up --build --force-recreate
+#
+# After running, access:
+#   API:  http://localhost:8000
+#   Docs: http://localhost:8000/docs
+# ============================================================
+
+version: "3.9"
+
+services:
+
+  # ── BACKEND SERVICE ──
+  backend:
+    # Build from our Dockerfile in the current directory
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    # Name the container for easy reference
+    container_name: ai-research-agent-backend
+
+    # Map port 8000 on your machine to port 8000 in the container
+    # Format: "host_port:container_port"
+    ports:
+      - "8000:8000"
+
+    # Load environment variables from .env file
+    # This is where your OPENAI_API_KEY lives
+    env_file:
+      - .env
+
+    # Additional environment variables (override .env values)
+    environment:
+      - APP_HOST=0.0.0.0
+      - APP_PORT=8000
+      - DEBUG=True
+
+    # Restart policy: restart if the container crashes
+    restart: unless-stopped
+
+    # Health check — Docker monitors this to know if the app is up
+    healthcheck:
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+    # Mount volumes for development (optional)
+    # Uncomment these lines to enable live code reloading in Docker:
+    # volumes:
+    #   - ./backend:/app
+    # command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+
+  # ── FRONTEND (Optional — simple static file server) ──
+  # Uncomment this to serve the frontend via Docker too.
+  # For production, deploy the frontend to Vercel/Netlify instead.
+  #
+  # frontend:
+  #   image: nginx:alpine
+  #   container_name: ai-research-agent-frontend
+  #   ports:
+  #     - "3000:80"
+  #   volumes:
+  #     - ./frontend:/usr/share/nginx/html:ro
+  #   depends_on:
+  #     - backend
+  #   restart: unless-stopped

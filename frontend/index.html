@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Research Assistant Agent</title>
+
+  <!-- Favicon emoji -->
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Marked.js — converts Markdown to HTML so the final answer renders nicely -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <!-- ============================================================
+       HEADER / NAVBAR
+  ============================================================ -->
+  <header class="header">
+    <div class="header-inner">
+      <!-- Logo & Title -->
+      <div class="logo">
+        <span class="logo-icon">🤖</span>
+        <div class="logo-text">
+          <span class="logo-title">AI Research Assistant</span>
+          <span class="logo-subtitle">Agentic AI System</span>
+        </div>
+      </div>
+
+      <!-- Header Actions -->
+      <div class="header-actions">
+        <!-- Agent status indicator -->
+        <div class="status-badge" id="statusBadge">
+          <span class="status-dot idle"></span>
+          <span class="status-text">Ready</span>
+        </div>
+
+        <!-- Dark / Light theme toggle -->
+        <button class="theme-toggle" id="themeToggle" aria-label="Toggle theme" title="Toggle dark/light mode">
+          <span class="theme-icon">🌙</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main class="main">
+
+    <!-- ── HERO SECTION ── -->
+    <section class="hero">
+      <div class="hero-badge">✨ Powered by GPT-4o-mini + LangChain</div>
+      <h1 class="hero-title">
+        Ask Anything.<br />
+        <span class="gradient-text">The Agent Does the Research.</span>
+      </h1>
+      <p class="hero-desc">
+        A multi-step AI agent that plans, searches, calculates, reflects,
+        and delivers a structured answer — showing you every step of its thinking.
+      </p>
+
+      <!-- ── INPUT CARD ── -->
+      <div class="input-card">
+        <div class="input-wrapper">
+          <span class="input-icon">🔍</span>
+          <textarea
+            id="queryInput"
+            class="query-input"
+            placeholder="Ask anything… e.g. 'What is quantum computing and how fast are quantum computers?'"
+            rows="3"
+            maxlength="1000"
+          ></textarea>
+        </div>
+
+        <!-- Example queries the user can click -->
+        <div class="example-queries">
+          <span class="example-label">Try:</span>
+          <button class="example-btn" data-query="What is machine learning and how does it work?">🧠 Machine Learning</button>
+          <button class="example-btn" data-query="What is 15% of 2450 and what is the square root of 144?">🔢 Math Calculation</button>
+          <button class="example-btn" data-query="Tell me about the history of the internet">🌐 Internet History</button>
+          <button class="example-btn" data-query="What is today's date and day of the week?">📅 Today's Date</button>
+        </div>
+
+        <!-- Run button -->
+        <div class="input-footer">
+          <span class="char-count" id="charCount">0 / 1000</span>
+          <button class="run-btn" id="runBtn" onclick="runAgent()">
+            <span class="btn-icon">▶</span>
+            <span class="btn-text">Run Agent</span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── AGENT WORKFLOW DASHBOARD ── -->
+    <!-- Hidden by default, shown when the agent starts running -->
+    <section class="workflow-section" id="workflowSection" style="display:none;">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">⚡</span>
+          Agent Thinking Dashboard
+        </h2>
+        <div class="processing-time" id="processingTime" style="display:none;"></div>
+      </div>
+
+      <!-- The 7-step workflow progress cards -->
+      <div class="workflow-grid" id="workflowGrid">
+
+        <div class="workflow-step" id="step-understanding" data-step="1">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">🎯</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 1</span>
+              <span class="step-name">Understanding Query</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Waiting to analyze your question...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-planning" data-step="2">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">📋</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 2</span>
+              <span class="step-name">Creating Research Plan</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Planning the research strategy...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-tools" data-step="3">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">🔧</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 3</span>
+              <span class="step-name">Selecting Tools</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Choosing the right tools for the job...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-executing" data-step="4">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">⚙️</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 4</span>
+              <span class="step-name">Executing Tasks</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Running tools and gathering information...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-observing" data-step="5">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">👁️</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 5</span>
+              <span class="step-name">Observing Results</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Reviewing collected information...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-reflection" data-step="6">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">🪞</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 6</span>
+              <span class="step-name">Reflection</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Assessing completeness and quality...</p>
+          <div class="step-duration"></div>
+        </div>
+
+        <div class="workflow-step" id="step-answer" data-step="7">
+          <div class="step-header">
+            <div class="step-icon-wrap">
+              <span class="step-icon">✅</span>
+            </div>
+            <div class="step-meta">
+              <span class="step-label">Step 7</span>
+              <span class="step-name">Final Answer</span>
+            </div>
+            <div class="step-status-badge pending">Pending</div>
+          </div>
+          <p class="step-summary">Generating your structured response...</p>
+          <div class="step-duration"></div>
+        </div>
+
+      </div><!-- /workflow-grid -->
+
+      <!-- Research Plan display (shows after planning step) -->
+      <div class="plan-card" id="planCard" style="display:none;">
+        <h3 class="plan-title">📋 Research Plan</h3>
+        <ol class="plan-list" id="planList"></ol>
+      </div>
+
+      <!-- Tools Used display -->
+      <div class="tools-card" id="toolsCard" style="display:none;">
+        <h3 class="tools-title">🔧 Tools Used</h3>
+        <div class="tools-list" id="toolsList"></div>
+      </div>
+
+    </section><!-- /workflow-section -->
+
+    <!-- ── FINAL ANSWER SECTION ── -->
+    <section class="answer-section" id="answerSection" style="display:none;">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">💡</span>
+          Final Answer
+        </h2>
+        <div class="answer-actions">
+          <button class="action-btn" onclick="copyAnswer()" title="Copy answer">
+            <span>📋</span> Copy
+          </button>
+          <button class="action-btn" onclick="newQuery()" title="Ask a new question">
+            <span>🔄</span> New Query
+          </button>
+        </div>
+      </div>
+
+      <!-- Reflection badge -->
+      <div class="reflection-card" id="reflectionCard" style="display:none;">
+        <span class="reflection-icon">🪞</span>
+        <p class="reflection-text" id="reflectionText"></p>
+      </div>
+
+      <!-- The Markdown-rendered final answer -->
+      <div class="answer-content markdown-body" id="answerContent"></div>
+    </section>
+
+    <!-- ── ERROR SECTION ── -->
+    <section class="error-section" id="errorSection" style="display:none;">
+      <div class="error-card">
+        <span class="error-icon">⚠️</span>
+        <h3 class="error-title">Something went wrong</h3>
+        <p class="error-message" id="errorMessage"></p>
+        <button class="run-btn" onclick="newQuery()" style="margin-top:1rem;">
+          Try Again
+        </button>
+      </div>
+    </section>
+
+    <!-- ── HISTORY SECTION ── -->
+    <section class="history-section" id="historySection">
+      <div class="section-header">
+        <h2 class="section-title">
+          <span class="section-icon">🕐</span>
+          Recent Queries
+        </h2>
+        <button class="action-btn" onclick="loadHistory()" title="Refresh history">
+          <span>🔄</span> Refresh
+        </button>
+      </div>
+
+      <!-- History cards are injected here by JavaScript -->
+      <div class="history-grid" id="historyGrid">
+        <div class="history-empty">
+          <span class="empty-icon">📭</span>
+          <p>No queries yet. Run your first agent above!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── HOW IT WORKS SECTION ── -->
+    <section class="how-section">
+      <h2 class="section-title" style="text-align:center; margin-bottom:2rem;">
+        <span class="section-icon">⚙️</span> How It Works
+      </h2>
+      <div class="how-grid">
+        <div class="how-card">
+          <span class="how-num">01</span>
+          <h3>Planner Agent</h3>
+          <p>Reads your question, understands the goal, and creates a step-by-step research plan with tool assignments.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">02</span>
+          <h3>Executor Agent</h3>
+          <p>Follows the plan by selecting and running tools — Wikipedia search, calculator, or date/time lookup.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">03</span>
+          <h3>Reflection Agent</h3>
+          <p>Reviews the gathered information and assesses whether it fully answers the original question.</p>
+        </div>
+        <div class="how-card">
+          <span class="how-num">04</span>
+          <h3>Response Generator</h3>
+          <p>Synthesizes all research into a clear, structured Markdown answer with headings, bullets, and a summary.</p>
+        </div>
+      </div>
+    </section>
+
+  </main><!-- /main -->
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer class="footer">
+    <div class="footer-inner">
+      <span>🤖 AI Research Assistant Agent</span>
+      <span>Built with FastAPI · LangChain · OpenAI</span>
+      <a href="http://localhost:8000/docs" target="_blank" rel="noopener">API Docs ↗</a>
+    </div>
+  </footer>
+
+  <!-- Loading overlay (shown while agent is running) -->
+  <div class="loading-overlay" id="loadingOverlay" style="display:none;">
+    <div class="loading-card">
+      <div class="spinner"></div>
+      <p class="loading-text" id="loadingText">Agent is thinking...</p>
+      <p class="loading-sub">This may take 10–30 seconds</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
