@@ -27,8 +27,7 @@
  * - In production: replace with your Render/Railway URL
  *   e.g. https://my-agent-backend.onrender.com
  */
-const API_BASE_URL = "http://localhost:8000";
-
+https://github.com/samruddhimhaske/agentic-ai-research-assistant/blob/main/frontend/script.js?utm_source=chatgpt.com
 // ============================================================
 // STATE
 // ============================================================
