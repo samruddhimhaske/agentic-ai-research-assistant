@@ -1,33 +1,19 @@
-/**
- * script.js — AI Research Assistant Agent Frontend Logic
- * =========================================================
- * This file handles ALL the interactivity of the frontend:
- *
- * 1. Sending queries to the backend API
- * 2. Updating the workflow dashboard in real-time
- * 3. Rendering the final Markdown answer
- * 4. Loading and displaying history
- * 5. Theme toggle (dark / light mode)
- * 6. Helper utilities (toasts, copy, etc.)
- *
- * HOW THE FRONTEND TALKS TO THE BACKEND:
- *   We use the Fetch API to send HTTP requests to the FastAPI backend.
- *   When the user clicks "Run Agent", we POST the query to /api/agent/run.
- *   The backend runs the agent and returns a JSON response.
- *   We then parse that JSON and update the UI.
- */
-
 // ============================================================
 // CONFIGURATION
 // ============================================================
 
 /**
  * Backend API URL.
- * - In development: http://localhost:8000
- * - In production: replace with your Render/Railway URL
- *   e.g. https://my-agent-backend.onrender.com
+ *
+ * The frontend and backend are deployed together on Render,
+ * so we use the same origin.
+ *
+ * Examples:
+ *   Local development → http://localhost:8000
+ *   Render production → "" (same domain)
  */
-https://github.com/samruddhimhaske/agentic-ai-research-assistant/blob/main/frontend/script.js?utm_source=chatgpt.com
+
+const API_BASE_URL = "";
 // ============================================================
 // STATE
 // ============================================================
